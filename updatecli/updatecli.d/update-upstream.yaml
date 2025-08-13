@@ -1,6 +1,5 @@
 ---
 name: "Update upstream version"
-
 sources:
   upstream:
     name: Get upstream version
@@ -10,18 +9,16 @@ sources:
       versionfilter:
         kind: regex
         pattern: "^v[0-9]+.[0-9]+.[0-9]+-k3s[0-9]+"
-
   gomod:
     name: Get latest Golang version based on go.mod
     kind: file
     dependson:
-     - "upstream"
+      - "upstream"
     spec:
       file: 'https://raw.githubusercontent.com/{{ .github.upstream.owner }}/{{ .github.upstream.repository }}/{{ source "upstream" }}/go.mod'
       matchpattern: 'go ([0-9]+\.[0-9]+)'
     transformers:
       - trimprefix: "go "
-
   buildbase:
     name: Get build base version
     kind: githubrelease
@@ -38,7 +35,6 @@ sources:
       versionfilter:
         kind: regex
         pattern: '{{ source "gomod"}}\.\S+'
-
 targets:
   dockerfile:
     name: 'Bump Dockerfile to upstream version {{ source "upstream" }}'
@@ -50,7 +46,6 @@ targets:
       instruction:
         keyword: "ARG"
         matcher: "TAG"
-
   makefile:
     name: 'Bump Makefile to upstream version {{ source "upstream" }}'
     kind: file
@@ -60,7 +55,6 @@ targets:
       file: Makefile
       matchpattern: '(?m)^TAG \:\= (.*)'
       replacepattern: 'TAG := {{ source "upstream" }}$$(BUILD_META)'
-
   updatebuildbase:
     name: 'Bump Dockerfile to the latest build base version {{ source "buildbase" }}'
     kind: dockerfile
@@ -73,7 +67,6 @@ targets:
         matcher: "GO_IMAGE"
     transformers:
       - addprefix: "rancher/hardened-build-base:"
-
 scms:
   upstream:
     kind: github
@@ -92,15 +85,14 @@ scms:
       owner: '{{ .github.owner }}'
       repository: '{{ .github.repository }}'
       branch: '{{ .github.branch }}'
-
 actions:
-    default:
-        title: 'Bump to upstream version {{ source "upstream" }}'
-        kind: github/pullrequest
-        spec:
-            automerge: false
-            labels:
-                - chore
-                - skip-changelog
-                - status/auto-created
-        scmid: default
+  default:
+    title: 'Bump to upstream version {{ source "upstream" }}'
+    kind: github/pullrequest
+    spec:
+      automerge: false
+      labels:
+        - chore
+        - skip-changelog
+        - status/auto-created
+    scmid: default
