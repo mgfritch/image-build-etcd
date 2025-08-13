@@ -1,5 +1,5 @@
 ---
-name: "Update build base version" 
+name: "Update build base version"
 
 sources:
   gomod:
@@ -53,7 +53,7 @@ scms:
       owner: '{{ .github.owner }}'
       repository: '{{ .github.repository }}'
       branch: '{{ .github.branch }}'
-      
+
 actions:
     default:
         title: 'Bump build base version to {{ source "buildbase" }}'
