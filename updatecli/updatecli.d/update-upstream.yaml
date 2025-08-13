@@ -33,6 +33,16 @@ targets:
       matchpattern: '(?m)^TAG \:\= (.*)'
       replacepattern: 'TAG := {{ source "upstream" }}$$(BUILD_META)'
 
+  updatebuildbase:
+    name: "Bump to latest {{ .github.repository }} version in updatecli"
+    kind: yaml
+    scmid: default
+    disablesourceinput: true
+    spec:
+      file: updatecli/updatecli.d/updatebuildbase.yaml
+      key: '$.sources.gomod.spec.file'
+      value: 'https://raw.githubusercontent.com/{{ .github.owner }}/{{ .github.repository }}/{{ source "upstream" }}/go.mod'
+
 scms:
   upstream:
     kind: github
