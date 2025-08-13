@@ -4,12 +4,10 @@ name: "Update build base version"
 sources:
   gomod:
     name: Get latest Golang version based on go.mod
-    kind: file
+    kind: golang/gomod
+    scmid: upstream
     spec:
-      file: https://raw.githubusercontent.com/k3s-io/etcd/v3.6.4-k3s1/go.mod
-      matchpattern: 'go ([0-9]+\.[0-9]+)'
-    transformers:
-      - trimprefix: "go "
+      kind: golang
 
   buildbase:
    name: Get build base version
@@ -43,6 +41,13 @@ targets:
       - addprefix: "rancher/hardened-build-base:"
 
 scms:
+  upstream:
+    kind: github
+    spec:
+      owner: '{{ .github.upstream.owner }}'
+      repository: '{{ .github.upstream.repository }}'
+      token: '{{ requiredEnv .github.token }}'
+      branch: master
   default:
     kind: github
     spec:
