@@ -9,4 +9,4 @@ github:
   upstream:
     owner: "k3s-io"
     repository: "etcd"
-    branch: "v3.6.4-k3s1"
+    branch: "master"

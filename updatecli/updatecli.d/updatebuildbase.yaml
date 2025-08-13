@@ -43,6 +43,14 @@ targets:
       - addprefix: "rancher/hardened-build-base:"
 
 scms:
+  upstream:
+    kind: github
+    spec:
+      url: 
+      owner: '{{ .github.upstream.owner }}'
+      repository: '{{ .github.upstream.repository }}'
+      token: '{{ requiredEnv .github.token }}'
+      branch: '{{ .github.upstream.branch }}'
   default:
     kind: github
     spec:
