@@ -13,9 +13,9 @@ sources:
     name: Get latest Golang version based on go.mod
     kind: file
     dependson:
-      - "upstream"
+      - upstream
     spec:
-      file: 'https://raw.githubusercontent.com/{{ .github.upstream.owner }}/{{ .github.upstream.repository }}/{{ source "upstream" }}/go.mod'
+      file: 'https://raw.githubusercontent.com/{{ .scm.upstream.owner }}/{{ .scm.upstream.repository }}/{{ source "upstream" }}/go.mod'
       matchpattern: 'go ([0-9]+\.[0-9]+)'
     transformers:
       - trimprefix: "go "
@@ -23,7 +23,7 @@ sources:
     name: Get build base version
     kind: githubrelease
     dependson:
-      - "gomod"
+      - gomod
     spec:
       owner: rancher
       repository: image-build-base
@@ -71,10 +71,10 @@ scms:
   upstream:
     kind: github
     spec:
-      owner: '{{ .github.upstream.owner }}'
-      repository: '{{ .github.upstream.repository }}'
       token: '{{ requiredEnv .github.token }}'
-      branch: master
+      owner: '{{ .scm.upstream.owner }}'
+      repository: '{{ .scm.upstream.repository }}'
+      branch: '{{ .scm.upstream.branch }}'
   default:
     kind: github
     spec:
@@ -82,9 +82,9 @@ scms:
       username: '{{ requiredEnv .github.username }}'
       user: '{{ .github.user }}'
       email: '{{ .github.email }}'
-      owner: '{{ .github.owner }}'
-      repository: '{{ .github.repository }}'
-      branch: '{{ .github.branch }}'
+      owner: '{{ .scm.default.owner }}'
+      repository: '{{ .scm.default.repository }}'
+      branch: '{{ .scm.default.branch }}'
 actions:
   default:
     title: 'Bump to upstream version {{ source "upstream" }}'
